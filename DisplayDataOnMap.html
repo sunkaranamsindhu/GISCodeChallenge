@@ -1,0 +1,108 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>FeatureLayer</title>
+
+    <link rel="stylesheet" href="https://js.arcgis.com/3.20/esri/css/esri.css">
+    <script src="https://js.arcgis.com/3.20/"></script>
+
+    <style>
+        @import "https://js.arcgis.com/3.20/dijit/themes/claro/claro.css";
+
+      .zoominIcon {
+        background-image: url(images/nav_zoomin.png);
+        width: 16px;
+        height: 16px;
+      }
+
+      .zoomoutIcon {
+        background-image: url(images/nav_zoomout.png);
+        width: 16px;
+        height: 16px;
+      }
+        html, 
+        body,
+         #map {
+            padding: 0;
+            margin: 0;
+            height: 100%;
+            width: 100%;
+        }
+        #search {
+            display: block;
+            position: absolute;
+            z-index: 2;
+            top: 40px;
+            left: 100px;
+        }
+    </style>
+
+    <script>
+require([
+    "esri/map",
+    "esri/dijit/Search",
+    "esri/toolbars/navigation",
+        "dojo/parser",
+        "dijit/registry",
+        "dijit/Toolbar",
+        "dijit/form/Button",
+    "esri/layers/FeatureLayer" ,
+    "dojo/domReady!"
+  ],
+  function(
+    Map,
+    Search,
+    Navigation, parser, registry,
+    FeatureLayer
+  ) {
+      parser.parse();
+
+      var navToolbar;
+
+
+    var map = new Map("map", {
+      basemap: "hybrid",
+      center: [-82.44109, 35.6122],
+      zoom: 17
+    });
+
+    var search = new Search({
+        map: map
+    }, "search");
+    search.startup();
+    navToolbar = new Navigation(map);
+    
+    registry.byId("zoomin").on("click", function () {
+        navToolbar.activate(Navigation.ZOOM_IN);
+    });
+
+    registry.byId("zoomout").on("click", function () {
+        navToolbar.activate(Navigation.ZOOM_OUT);
+    });
+    /****************************************************************
+     * Add feature layer - A FeatureLayer at minimum should point
+     * to a URL to a feature service or point to a feature collection
+     * object.
+     ***************************************************************/
+
+    // Give URL of featureService
+    var featureLayer = new FeatureLayer("http://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/Redlands_CA/FeatureServer");
+
+    map.addLayer(featureLayer);
+
+  });
+    </script>
+</head>
+
+<body>
+    
+    <div id="navToolbar" data-dojo-type="dijit/Toolbar">
+        <div data-dojo-type="dijit/form/Button" id="zoomin" data-dojo-props="iconClass:'zoominIcon'">Zoom In</div>
+        <div data-dojo-type="dijit/form/Button" id="zoomout" data-dojo-props="iconClass:'zoomoutIcon'">Zoom Out</div></div>
+    <div id="search"></div>
+        <div id="map"></div>
+</body>
+
+</html>
