@@ -11,25 +11,27 @@
     <style>
         @import "https://js.arcgis.com/3.20/dijit/themes/claro/claro.css";
 
-      .zoominIcon {
-        background-image: url(images/nav_zoomin.png);
-        width: 16px;
-        height: 16px;
-      }
+        .zoominIcon {
+            background-image: url("images/zoomin.png");
+            width: 16px;
+            height: 16px;
+        }
 
-      .zoomoutIcon {
-        background-image: url(images/nav_zoomout.png);
-        width: 16px;
-        height: 16px;
-      }
-        html, 
+        .zoomoutIcon {
+            background-image: url("images/zoomout.png");
+            width: 16px;
+            height: 16px;
+        }
+
+        html,
         body,
-         #map {
+        #map {
             padding: 0;
             margin: 0;
             height: 100%;
             width: 100%;
         }
+
         #search {
             display: block;
             position: absolute;
@@ -44,18 +46,18 @@ require([
     "esri/map",
     "esri/dijit/Search",
     "esri/toolbars/navigation",
+    "esri/layers/FeatureLayer",
         "dojo/parser",
         "dijit/registry",
         "dijit/Toolbar",
         "dijit/form/Button",
-    "esri/layers/FeatureLayer" ,
     "dojo/domReady!"
   ],
   function(
     Map,
     Search,
-    Navigation, parser, registry,
-    FeatureLayer
+    Navigation,FeatureLayer, parser, registry
+
   ) {
       parser.parse();
 
@@ -63,9 +65,9 @@ require([
 
 
     var map = new Map("map", {
-      basemap: "hybrid",
-      center: [-82.44109, 35.6122],
-      zoom: 17
+        basemap: "streets",
+        center: [-117.182541, 34.055569],
+      zoom: 14
     });
 
     var search = new Search({
@@ -73,7 +75,7 @@ require([
     }, "search");
     search.startup();
     navToolbar = new Navigation(map);
-    
+
     registry.byId("zoomin").on("click", function () {
         navToolbar.activate(Navigation.ZOOM_IN);
     });
@@ -86,9 +88,11 @@ require([
      * to a URL to a feature service or point to a feature collection
      * object.
      ***************************************************************/
-
+      
     // Give URL of featureService
-    var featureLayer = new FeatureLayer("http://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/Redlands_CA/FeatureServer");
+    var featureLayer = new FeatureLayer
+     // ("http://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/City_Of_Redlands/FeatureServer/0");
+("http://services1.arcgis.com/0MSEUqKaxRlEPj5g/ArcGIS/rest/services/Redlands_CA/FeatureServer/0");
 
     map.addLayer(featureLayer);
 
@@ -97,12 +101,13 @@ require([
 </head>
 
 <body>
-    
+
     <div id="navToolbar" data-dojo-type="dijit/Toolbar">
         <div data-dojo-type="dijit/form/Button" id="zoomin" data-dojo-props="iconClass:'zoominIcon'">Zoom In</div>
-        <div data-dojo-type="dijit/form/Button" id="zoomout" data-dojo-props="iconClass:'zoomoutIcon'">Zoom Out</div></div>
+        <div data-dojo-type="dijit/form/Button" id="zoomout" data-dojo-props="iconClass:'zoomoutIcon'">Zoom Out</div>
+    </div>
     <div id="search"></div>
-        <div id="map"></div>
+    <div id="map"></div>
 </body>
 
 </html>
